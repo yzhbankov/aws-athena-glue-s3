@@ -1,0 +1,151 @@
+openapi: 3.0.0
+paths:
+  "/api/v1/users":
+    options:
+      responses:
+        "200":
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content: { }
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: 200
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,POST'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: when_no_match
+        type: mock
+    post:
+      operationId: UsersController_saveUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUserDto"
+        required: true
+      responses:
+        "422":
+          description: "422 response"
+          content: { }
+        "200":
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserEntity"
+        "403":
+          description: "403 response"
+          content: { }
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        uri: arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/${users_lambda_arn}/invocations
+        passthroughBehavior: when_no_match
+        type: aws_proxy
+  "/api/v1/users/{id}":
+    options:
+      responses:
+        "200":
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content: { }
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: 200
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,GET'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: when_no_match
+        type: mock
+    get:
+      operationId: "UsersController_readUsers"
+      responses:
+        "200":
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserEntity"
+        "403":
+          description: "403 response"
+          content: { }
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        uri: arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/${users_lambda_arn}/invocations
+        passthroughBehavior: when_no_match
+        type: aws_proxy
+info:
+  title: Aws-Web-Server
+  description: The Aws-Web-Server API
+  version: '1.0'
+  contact: {}
+tags:
+  - name: users
+    description: ''
+servers: []
+components:
+  schemas:
+    CreateUserDto:
+      type: object
+      properties:
+        email:
+          type: string
+        name:
+          type: string
+        password:
+          type: string
+      required:
+        - email
+        - password
+    UserEntity:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 642ff272f68f2b39a4a6f7df
+          description: User unique identifier
+        email:
+          type: string
+          example: example@gmail.com
+          description: User email url
+        name:
+          type: string
+          example: John Doe
+          description: User name
+        createdAt:
+          type: string
+          example: '2023-01-02T12:00:00Z'
+          description: Date of user creation
