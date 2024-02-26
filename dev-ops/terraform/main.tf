@@ -69,13 +69,13 @@ resource "aws_glue_table" "glue_users_table" {
   database = aws_glue_database.glue_database.name
 
   table_input {
-    name     = "glue_users_table"
+    name = "glue_users_table"
     parameters = {
       "classification" = "csv"
     }
 
     storage_descriptor {
-      location = aws_s3_bucket_object.csv_files_folder.bucket
+      location      = aws_s3_bucket_object.csv_files_folder.bucket
       input_format  = "org.apache.hadoop.mapred.TextInputFormat"
       output_format = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
 
@@ -85,12 +85,12 @@ resource "aws_glue_table" "glue_users_table" {
       }
     }
     columns = [
-      { name = "first_name",   type = "string" },
-      { name = "second_name",  type = "string" },
-      { name = "email",        type = "string" },
-      { name = "created_at",   type = "string" },
-      { name = "updated_at",   type = "string" },
-      { name = "id",           type = "bigint" },
+      { name = "first_name", type = "string" },
+      { name = "second_name", type = "string" },
+      { name = "email", type = "string" },
+      { name = "created_at", type = "string" },
+      { name = "updated_at", type = "string" },
+      { name = "id", type = "bigint" },
     ]
   }
 }
@@ -102,7 +102,7 @@ resource "aws_glue_classifier" "csv_classifier_users" {
     contains_header     = "PRESENT"
     delimiter           = ","
     disable_value_trim  = false
-    header              = [
+    header = [
       "first_name",
       "second_name",
       "email",
@@ -110,16 +110,16 @@ resource "aws_glue_classifier" "csv_classifier_users" {
       "updated_at",
       "id",
     ]
-    name                = "CSV-Classifier-Users"
+    name = "CSV-Classifier-Users"
   }
 }
 
 resource "aws_glue_crawler" "example_crawler" {
-  name                  = "glue_users_crawler"
-  database_name         = aws_glue_database.glue_database.name
-  role                 = aws_iam_role.glue_crawler_role.arn
-  table_name            = aws_glue_table.glue_users_table.name
-  classifiers           = [aws_glue_classifier.csv_classifier_users.name]
+  name          = "glue_users_crawler"
+  database_name = aws_glue_database.glue_database.name
+  role          = aws_iam_role.glue_crawler_role.arn
+  table_name    = aws_glue_table.glue_users_table.name
+  classifiers   = [aws_glue_classifier.csv_classifier_users.name]
   s3_target {
     path = aws_s3_bucket.users_bucket.bucket
   }
