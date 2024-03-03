@@ -85,9 +85,9 @@ resource "aws_lambda_function" "users-lambda" {
   environment {
     variables = {
       ENVIRONMENT        = terraform.workspace
-      ATHENA_REGION      = "us-east-1",                 # Replace with your Athena region
-      ATHENA_WORKGROUP   = athena_users_workgroup,      # Replace with your Athena workgroup
-      ATHENA_OUTPUT_PATH = athena_query_results_bucket, # Replace with your S3 bucket path
+      ATHENA_REGION      = "us-east-1",
+      ATHENA_WORKGROUP   = aws_athena_workgroup.athena_users_workgroup.name,
+      ATHENA_OUTPUT_PATH = aws_s3_bucket.athena_query_results_bucket.bucket,
       DATABASE_NAME      = aws_glue_catalog_database.glue_database.name
       TABLE_NAME         = aws_glue_catalog_table.glue_users_table.name
     }

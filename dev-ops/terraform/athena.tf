@@ -1,9 +1,22 @@
 resource "aws_athena_data_catalog" "athena_users_data_catalog" {
-  name        = "athena-users-data-catalog"
-  description = "Athena Users data catalog"
-  #  type        = "LAMBDA"
+  name        = "glue-data-catalog"
+  description = "Glue based Data Catalog"
+  type        = "GLUE"
 
-  #  parameters = {
-  #    "function" = "arn:aws:lambda:eu-central-1:123456789012:function:not-important-lambda-function"
-  #  }
+  parameters = {
+    "catalog-id" = aws_glue_catalog_database.glue_database.id
+  }
+}
+
+resource "aws_athena_workgroup" "athena_users_workgroup" {
+  name = "athena_users_workgroup"
+
+  configuration {
+    enforce_workgroup_configuration    = true
+    publish_cloudwatch_metrics_enabled = true
+
+    result_configuration {
+      output_location = "s3://${aws_s3_bucket.athena_query_results_bucket.bucket}/output/"
+    }
+  }
 }

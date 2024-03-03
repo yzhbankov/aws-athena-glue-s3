@@ -126,8 +126,8 @@ resource "aws_glue_crawler" "example_crawler" {
   name          = "glue_users_crawler"
   database_name = aws_glue_catalog_database.glue_database.name
   role          = aws_iam_role.glue_crawler_role.arn
-  table_name    = aws_glue_catalog_table.glue_users_table.name
   classifiers   = [aws_glue_classifier.csv_classifier_users.name]
+
   s3_target {
     path = aws_s3_bucket.users_bucket.bucket
   }
