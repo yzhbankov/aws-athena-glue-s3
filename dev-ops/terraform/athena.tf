@@ -1,5 +1,5 @@
 resource "aws_athena_data_catalog" "athena_users_data_catalog" {
-  name        = "glue-data-catalog"
+  name        = "${terraform.workspace}-yz-glue-data-catalog"
   description = "Glue based Data Catalog"
   type        = "GLUE"
 
@@ -9,7 +9,7 @@ resource "aws_athena_data_catalog" "athena_users_data_catalog" {
 }
 
 resource "aws_athena_workgroup" "athena_users_workgroup" {
-  name = "athena_users_workgroup"
+  name = "${terraform.workspace}-yz-athena-users-workgroup"
 
   configuration {
     enforce_workgroup_configuration    = true

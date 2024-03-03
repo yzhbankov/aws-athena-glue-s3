@@ -14,7 +14,7 @@ data "aws_iam_policy_document" "assume_role" {
 }
 
 resource "aws_iam_policy" "athena_execution_policy" {
-  name        = "athena_execution_policy"
+  name        = "${terraform.workspace}_yz_athena_execution_policy"
   description = "Execution policy for Athena"
 
   # Terraform's "jsonencode" function converts a
@@ -34,7 +34,7 @@ resource "aws_iam_policy" "athena_execution_policy" {
 }
 
 resource "aws_iam_role" "iam_for_lambda" {
-  name               = "${terraform.workspace}_athena_users_iam_for_lambda"
+  name               = "${terraform.workspace}_yz_athena_users_iam_for_lambda"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
@@ -73,7 +73,7 @@ data "archive_file" "users-lambda" {
 }
 
 resource "aws_lambda_function" "users-lambda" {
-  function_name    = "${terraform.workspace}-glue-users-lambda"
+  function_name    = "${terraform.workspace}-yz-glue-users-lambda"
   role             = aws_iam_role.iam_for_lambda.arn
   filename         = data.archive_file.users-lambda.output_path
   handler          = "index.handler"

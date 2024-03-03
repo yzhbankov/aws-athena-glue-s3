@@ -1,5 +1,5 @@
 resource "aws_api_gateway_rest_api" "users-api" {
-  name        = "athena-users-api"
+  name        = "${terraform.workspace}-yz-athena-users-api"
   description = "Aws Web Server API Gateway"
   body = templatefile("${path.module}/../../apps/api-gateway/api.yaml",
     {
@@ -14,7 +14,7 @@ resource "aws_api_gateway_rest_api" "users-api" {
   }
 
   tags = {
-    Name = "users-api-gateway"
+    Name = "${terraform.workspace}-yz-users-api-gateway"
   }
 }
 
