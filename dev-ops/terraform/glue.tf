@@ -132,3 +132,4 @@ resource "aws_glue_crawler" "example_crawler" {
     path = aws_s3_bucket.users_bucket.bucket
   }
 }
+
