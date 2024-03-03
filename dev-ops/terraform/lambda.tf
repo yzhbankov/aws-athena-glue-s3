@@ -73,7 +73,7 @@ data "archive_file" "users-lambda" {
 }
 
 resource "aws_lambda_function" "users-lambda" {
-  function_name    = "${terraform.workspace}-users-lambda"
+  function_name    = "${terraform.workspace}-glue-users-lambda"
   role             = aws_iam_role.iam_for_lambda.arn
   filename         = data.archive_file.users-lambda.output_path
   handler          = "index.handler"
@@ -88,8 +88,8 @@ resource "aws_lambda_function" "users-lambda" {
       ATHENA_REGION      = "us-east-1",                 # Replace with your Athena region
       ATHENA_WORKGROUP   = athena_users_workgroup,      # Replace with your Athena workgroup
       ATHENA_OUTPUT_PATH = athena_query_results_bucket, # Replace with your S3 bucket path
-      DATABASE_NAME      = aws_glue_database.glue_database.name
-      TABLE_NAME         = aws_glue_table.glue_users_table.name
+      DATABASE_NAME      = aws_glue_catalog_database.glue_database.name
+      TABLE_NAME         = aws_glue_catalog_table.glue_users_table.name
     }
   }
 }
