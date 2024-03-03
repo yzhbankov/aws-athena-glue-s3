@@ -1,12 +1,9 @@
-resource "aws_s3_bucket" "athena_query_results_bucket" {
-  bucket = "athena-query-results-bucket"
-  acl    = "private"
-}
-
-resource "aws_athena_workgroup" "athena_users_workgroup" {
-  name = "athena_users_workgroup"
-}
-
 resource "aws_athena_data_catalog" "athena_users_data_catalog" {
-  name = "athena_users_data_catalog"
+  name        = "athena-users-data-catalog"
+  description = "Athena Users data catalog"
+  #  type        = "LAMBDA"
+
+  #  parameters = {
+  #    "function" = "arn:aws:lambda:eu-central-1:123456789012:function:not-important-lambda-function"
+  #  }
 }

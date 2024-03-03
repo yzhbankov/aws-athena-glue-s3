@@ -13,23 +13,24 @@ data "aws_iam_policy_document" "assume_role" {
   }
 }
 
-data "aws_iam_policy" "athena_execution_policy" {
-  # Define the IAM policy for Athena execution
-  # You may need to customize this policy based on your specific needs
-  source_json = <<JSON
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "athena:StartQueryExecution"
-      ],
-      "Resource": "*"
-    }
-  ]
-}
-JSON
+resource "aws_iam_policy" "athena_execution_policy" {
+  name        = "athena_execution_policy"
+  description = "Execution policy for Athena"
+
+  # Terraform's "jsonencode" function converts a
+  # Terraform expression result to valid JSON syntax.
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "athena:StartQueryExecution"
+        ],
+        "Resource" : "*"
+      }
+    ]
+  })
 }
 
 resource "aws_iam_role" "iam_for_lambda" {
@@ -38,7 +39,7 @@ resource "aws_iam_role" "iam_for_lambda" {
 }
 
 resource "aws_iam_role_policy_attachment" "athena_execution_attachment" {
-  policy_arn = data.aws_iam_policy.athena_execution_policy.arn
+  policy_arn = aws_iam_policy.athena_execution_policy.arn
   role       = aws_iam_role.iam_for_lambda.name
 }
 
@@ -81,7 +82,7 @@ resource "aws_lambda_function" "users-lambda" {
   timeout          = local.lambda_timeout
 
 
-  environment = {
+  environment {
     variables = {
       ENVIRONMENT        = terraform.workspace
       ATHENA_REGION      = "us-east-1",                 # Replace with your Athena region
