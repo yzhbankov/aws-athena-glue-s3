@@ -14,7 +14,7 @@ data "aws_iam_policy_document" "assume_role" {
 }
 
 resource "aws_iam_policy" "athena_execution_policy" {
-  name        = "athena_execution_policy"
+  name        = "${terraform.workspace}_yz_athena_execution_policy"
   description = "Execution policy for Athena"
 
   # Terraform's "jsonencode" function converts a
@@ -34,7 +34,7 @@ resource "aws_iam_policy" "athena_execution_policy" {
 }
 
 resource "aws_iam_role" "iam_for_lambda" {
-  name               = "${terraform.workspace}_athena_users_iam_for_lambda"
+  name               = "${terraform.workspace}_yz_athena_users_iam_for_lambda"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
@@ -73,23 +73,23 @@ data "archive_file" "users-lambda" {
 }
 
 resource "aws_lambda_function" "users-lambda" {
-  function_name    = "${terraform.workspace}-users-lambda"
+  function_name    = "${terraform.workspace}-yz-glue-users-lambda"
   role             = aws_iam_role.iam_for_lambda.arn
   filename         = data.archive_file.users-lambda.output_path
   handler          = "index.handler"
   source_code_hash = data.archive_file.users-lambda.output_base64sha256
-  runtime          = "nodejs14.x"
+  runtime          = "nodejs20.x"
   timeout          = local.lambda_timeout
 
 
   environment {
     variables = {
       ENVIRONMENT        = terraform.workspace
-      ATHENA_REGION      = "us-east-1",                 # Replace with your Athena region
-      ATHENA_WORKGROUP   = athena_users_workgroup,      # Replace with your Athena workgroup
-      ATHENA_OUTPUT_PATH = athena_query_results_bucket, # Replace with your S3 bucket path
-      DATABASE_NAME      = aws_glue_database.glue_database.name
-      TABLE_NAME         = aws_glue_table.glue_users_table.name
+      ATHENA_REGION      = "us-east-1",
+      ATHENA_WORKGROUP   = aws_athena_workgroup.athena_users_workgroup.name,
+      ATHENA_OUTPUT_PATH = aws_s3_bucket.athena_query_results_bucket.bucket,
+      DATABASE_NAME      = aws_glue_catalog_database.glue_database.name
+      TABLE_NAME         = aws_glue_catalog_table.glue_users_table.name
     }
   }
 }

@@ -1,6 +1,6 @@
 # AWS S3 Data Source
 resource "aws_s3_bucket" "users_bucket" {
-  bucket = "users_bucket"
+  bucket = "${terraform.workspace}-yz-users-bucket"
 }
 
 resource "aws_s3_object" "csv_files_folder" {
@@ -24,7 +24,7 @@ resource "aws_s3_bucket_acl" "users_bucket" {
 
 # AWS S3 Output Bucket
 resource "aws_s3_bucket" "athena_query_results_bucket" {
-  bucket = "athena-query-results-bucket"
+  bucket = "${terraform.workspace}-yz-athena-query-results-bucket"
 }
 
 resource "aws_s3_bucket_ownership_controls" "athena_query_results_bucket" {

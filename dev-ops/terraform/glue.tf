@@ -1,5 +1,5 @@
 resource "aws_iam_role" "glue_crawler_role" {
-  name = "glue_crawler_role"
+  name = "${terraform.workspace}_yz_glue_crawler_role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -49,11 +49,11 @@ resource "aws_iam_role_policy_attachment" "s3_access_attachment" {
 }
 
 resource "aws_glue_catalog_database" "glue_database" {
-  name = "glue_users_database"
+  name = "${terraform.workspace}-yz-glue-users-db"
 }
 
 resource "aws_glue_catalog_table" "glue_users_table" {
-  name          = "glue_users_table"
+  name          = "${terraform.workspace}_yz_glue_users_table"
   database_name = aws_glue_catalog_database.glue_database.name
 
   table_type = "EXTERNAL_TABLE"
@@ -72,7 +72,7 @@ resource "aws_glue_catalog_table" "glue_users_table" {
     output_format = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
 
     ser_de_info {
-      name                  = "glue_users_table"
+      name                  = "${terraform.workspace}_yz_glue_users_table"
       serialization_library = "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe"
     }
 
@@ -110,7 +110,7 @@ resource "aws_glue_catalog_table" "glue_users_table" {
 }
 
 resource "aws_glue_classifier" "csv_classifier_users" {
-  name = "CSV-Classifier-Users"
+  name = "${terraform.workspace}-yz-CSV-Classifier-Users"
 
   csv_classifier {
     allow_single_column    = false
@@ -123,12 +123,13 @@ resource "aws_glue_classifier" "csv_classifier_users" {
 }
 
 resource "aws_glue_crawler" "example_crawler" {
-  name          = "glue_users_crawler"
+  name          = "${terraform.workspace}_yz_glue_users_crawler"
   database_name = aws_glue_catalog_database.glue_database.name
   role          = aws_iam_role.glue_crawler_role.arn
-  table_name    = aws_glue_catalog_table.glue_users_table.name
   classifiers   = [aws_glue_classifier.csv_classifier_users.name]
+
   s3_target {
     path = aws_s3_bucket.users_bucket.bucket
   }
 }
+
