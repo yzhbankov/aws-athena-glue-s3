@@ -63,11 +63,8 @@ resource "aws_glue_catalog_table" "glue_users_table" {
     "classification" = "csv"
   }
 
-
-
-
   storage_descriptor {
-    location      = aws_s3_object.csv_files_folder.bucket
+    location      = "s3://${aws_s3_object.csv_files_folder.bucket}/"
     input_format  = "org.apache.hadoop.mapred.TextInputFormat"
     output_format = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
 
