@@ -25,11 +25,40 @@ resource "aws_iam_policy" "athena_execution_policy" {
       {
         "Effect" : "Allow",
         "Action" : [
-          "athena:StartQueryExecution"
+          "athena:StartQueryExecution",
+          "athena:StopQueryExecution",
+          "athena:GetQueryExecution",
+          "athena:GetQueryResults",
+          "athena:GetDataCatalog",
+          "glue:GetDatabase",
+          "glue:GetTable",
+          "glue:GetTables"
         ],
         "Resource" : "*"
       }
     ]
+  })
+}
+
+# Create a custom policy for Get and Put access to users_bucket
+resource "aws_iam_policy" "s3_athena_output_policy" {
+  name        = "S3AthenaOutputAccessPolicy"
+  description = "Policy allowing Get and Put access to users_bucket"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "s3:GetObject",
+          "s3:PutObject",
+        ],
+        Resource = [
+          "${aws_s3_bucket.athena_query_results_bucket.arn}/*",
+        ],
+      },
+    ],
   })
 }
 
@@ -40,6 +69,11 @@ resource "aws_iam_role" "iam_for_lambda" {
 
 resource "aws_iam_role_policy_attachment" "athena_execution_attachment" {
   policy_arn = aws_iam_policy.athena_execution_policy.arn
+  role       = aws_iam_role.iam_for_lambda.name
+}
+
+resource "aws_iam_role_policy_attachment" "athena_output_attachment" {
+  policy_arn = aws_iam_policy.s3_athena_output_policy.arn
   role       = aws_iam_role.iam_for_lambda.name
 }
 
