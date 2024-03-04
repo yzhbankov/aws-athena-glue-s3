@@ -51,7 +51,6 @@ resource "aws_iam_policy" "s3_athena_output_policy" {
       {
         Effect = "Allow",
         Action = [
-          "s3:GetObject",
           "s3:PutObject",
         ],
         Resource = [
@@ -80,6 +79,11 @@ resource "aws_iam_role_policy_attachment" "athena_output_attachment" {
 resource "aws_iam_role_policy_attachment" "lambda_basic_execution_role_policy" {
   role       = aws_iam_role.iam_for_lambda.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_s3_readonly_policy" {
+  role       = aws_iam_role.iam_for_lambda.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_logs_role_policy" {
