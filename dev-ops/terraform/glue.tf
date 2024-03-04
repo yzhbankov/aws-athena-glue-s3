@@ -59,8 +59,10 @@ resource "aws_glue_catalog_table" "glue_users_table" {
   table_type = "EXTERNAL_TABLE"
 
   parameters = {
-    EXTERNAL         = "TRUE"
-    "classification" = "csv"
+    "skip.header.line.count" = 1
+    "quoteChar"              = "'"
+    "classification"         = "csv"
+    "delimiter"              = ","
   }
 
   storage_descriptor {
@@ -70,7 +72,12 @@ resource "aws_glue_catalog_table" "glue_users_table" {
 
     ser_de_info {
       name                  = "${terraform.workspace}_yz_glue_users_table"
-      serialization_library = "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe"
+      serialization_library = "org.apache.hadoop.hive.serde2.OpenCSVSerde"
+
+      parameters = {
+        "separatorChar" = ","
+        "quoteChar"     = "'"
+      }
     }
 
     columns {
