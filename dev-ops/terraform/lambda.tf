@@ -78,7 +78,7 @@ resource "aws_lambda_function" "users-lambda" {
   filename         = data.archive_file.users-lambda.output_path
   handler          = "index.handler"
   source_code_hash = data.archive_file.users-lambda.output_base64sha256
-  runtime          = "nodejs14.x"
+  runtime          = "nodejs20.x"
   timeout          = local.lambda_timeout
 
 

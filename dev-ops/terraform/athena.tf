@@ -2,10 +2,6 @@ resource "aws_athena_data_catalog" "athena_users_data_catalog" {
   name        = "${terraform.workspace}-yz-glue-data-catalog"
   description = "Glue based Data Catalog"
   type        = "GLUE"
-
-  parameters = {
-    "catalog-id" = aws_glue_catalog_database.glue_database.id
-  }
 }
 
 resource "aws_athena_workgroup" "athena_users_workgroup" {
