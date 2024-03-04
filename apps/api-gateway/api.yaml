@@ -21,25 +21,16 @@ paths:
           default:
             statusCode: 200
             responseParameters:
-              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,POST'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,GET'"
               method.response.header.Access-Control-Allow-Headers: "'Content-Type'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestTemplates:
           application/json: "{\"statusCode\": 200}"
         passthroughBehavior: when_no_match
         type: mock
-    post:
-      operationId: UsersController_saveUser
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateUserDto"
-        required: true
+    get:
+      operationId: "UsersController_readUsers"
       responses:
-        "422":
-          description: "422 response"
-          content: { }
         "200":
           description: "200 response"
           headers:
@@ -87,7 +78,7 @@ paths:
         passthroughBehavior: when_no_match
         type: mock
     get:
-      operationId: "UsersController_readUsers"
+      operationId: "UsersController_readUser"
       responses:
         "200":
           description: "200 response"
@@ -118,34 +109,30 @@ tags:
 servers: []
 components:
   schemas:
-    CreateUserDto:
-      type: object
-      properties:
-        email:
-          type: string
-        name:
-          type: string
-        password:
-          type: string
-      required:
-        - email
-        - password
     UserEntity:
       type: object
       properties:
-        _id:
-          type: string
-          example: 642ff272f68f2b39a4a6f7df
-          description: User unique identifier
+        id:
+          type: number
+          example: 1
+          description: User identifier
         email:
           type: string
           example: example@gmail.com
           description: User email url
-        name:
+        first_name:
           type: string
-          example: John Doe
-          description: User name
-        createdAt:
+          example: John
+          description: User first name
+        second_name:
+          type: string
+          example: Doe
+          description: User second name
+        created_at:
           type: string
           example: '2023-01-02T12:00:00Z'
-          description: Date of user creation
+          description: User create timestamp
+        updated_at:
+          type: string
+          example: '2023-01-02T12:00:00Z'
+          description: User update timestamp
