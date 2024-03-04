@@ -1,6 +1,6 @@
 # AWS S3 Data Source
 resource "aws_s3_bucket" "users_bucket" {
-  bucket = "${terraform.workspace}_yz_users_bucket"
+  bucket = "${terraform.workspace}-yz-users-bucket"
 }
 
 resource "aws_s3_object" "csv_files_folder" {

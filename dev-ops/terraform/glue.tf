@@ -49,7 +49,7 @@ resource "aws_iam_role_policy_attachment" "s3_access_attachment" {
 }
 
 resource "aws_glue_catalog_database" "glue_database" {
-  name = "${terraform.workspace}_yz_glue_users_database"
+  name = "${terraform.workspace}-yz-glue-users-db"
 }
 
 resource "aws_glue_catalog_table" "glue_users_table" {
