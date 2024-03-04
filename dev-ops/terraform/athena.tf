@@ -1,15 +1,3 @@
-data "aws_caller_identity" "current" {}
-
-resource "aws_athena_data_catalog" "athena_users_data_catalog" {
-  name        = "${terraform.workspace}-yz-glue-data-catalog"
-  description = "Glue based Data Catalog"
-  type        = "GLUE"
-
-  parameters = {
-    "catalog-id" = data.aws_caller_identity.current.account_id
-  }
-}
-
 resource "aws_athena_workgroup" "athena_users_workgroup" {
   name = "${terraform.workspace}-yz-athena-users-workgroup"
 
