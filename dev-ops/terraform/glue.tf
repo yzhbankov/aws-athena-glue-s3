@@ -135,7 +135,5 @@ resource "aws_glue_crawler" "example_crawler" {
   s3_target {
     path = aws_s3_bucket.users_bucket.bucket
   }
-
-  table_exists_behavior = "UPDATE_IN_DATABASE"
 }
 
