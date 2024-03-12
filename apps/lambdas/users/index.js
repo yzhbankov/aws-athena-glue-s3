@@ -1,5 +1,5 @@
 import AWS from '@aws-sdk/client-athena';
-import { Repository } from './repository';
+import { Repository } from './Repository.js';
 import { getSqlByRequestParams } from './utils.js';
 
 // Create an Athena client
@@ -12,8 +12,8 @@ export const handler = async (event, context) => {
     const WORKGROUP = process.env.ATHENA_WORKGROUP;
     const OUTPUT_LOCATION = `s3://${process.env.ATHENA_OUTPUT_PATH}/`;
 
-    const idStartIndex = event.path.lastIndexOf('/') + 1;
-    const reqParam = event.path.substring(idStartIndex);
+    const idStartIndex = event.path.lastIndexOf('users/');
+    const reqParam = idStartIndex !== -1 ? event.path.substring(idStartIndex + 6) : undefined;
 
     // Set the Athena query string
     const query = getSqlByRequestParams(reqParam, TABLE_NAME); // Replace with your actual database and table
