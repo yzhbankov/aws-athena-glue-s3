@@ -16,9 +16,9 @@ export function convertRowToObject(headersMap, row) {
 
 export function getSqlByRequestParams(reqParam, tableName) {
     if (reqParam === undefined) {
-        return `SELECT * FROM "${tableName}"`
+        return `SELECT * FROM ${tableName}`
     }
     else {
-        return `SELECT * FROM "${tableName}" WHERE id = "${reqParam}"`
+        return `SELECT * FROM ${tableName} WHERE id = ${reqParam}`
     }
 }
