@@ -45,7 +45,7 @@ paths:
           description: "403 response"
           content: { }
       x-amazon-apigateway-integration:
-        httpMethod: GET
+        httpMethod: POST #should be a POST https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-integrations.html
         uri: arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/${users_lambda_arn}/invocations
         passthroughBehavior: when_no_match
         type: aws_proxy
@@ -94,7 +94,7 @@ paths:
           description: "403 response"
           content: { }
       x-amazon-apigateway-integration:
-        httpMethod: GET
+        httpMethod: POST #should be a POST https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-integrations.html
         uri: arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/${users_lambda_arn}/invocations
         passthroughBehavior: when_no_match
         type: aws_proxy
